@@ -1,24 +1,22 @@
 package com.example.cardgame.presentation
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.Toast
-import com.example.cardgame.R
+import androidx.fragment.app.Fragment
 import com.example.cardgame.business.models.CardModel
-import com.example.cardgame.business.models.Constants
 import com.example.cardgame.databinding.FragmentGameBinding
+import java.util.*
+import kotlin.random.Random
+
 
 class GameFragment : Fragment() {
     private var _binding : FragmentGameBinding? = null
     private val binding get() = _binding!!
 
-    //private lateinit var selectedCardImageView: ImageView
-    //private lateinit var cardGridLayout: GridLayout
     private lateinit var deck: List<CardModel>
     private lateinit var selectedCard: CardModel
 
@@ -30,11 +28,6 @@ class GameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        //selectedCardImageView = requireView().findViewById(R.id.iv_guess_card)
-        //cardGridLayout = requireView().findViewById(R.id.card_grid_layout)
-
-
 
         _binding = FragmentGameBinding.inflate(inflater, container, false)
 
@@ -48,33 +41,32 @@ class GameFragment : Fragment() {
         deck = createDeck()
         deck = deck.shuffled()
 
-        val a = deck.random()
+        val cards = deck.shuffled().take(15)
+        val randomIndex = Random.nextInt(15)
+        selectedCard = cards[randomIndex]
         // Выбор случайной карты для отображения
-        selectedCard = deck.random()
-        println(selectedCard.card)
+
         binding.ivGuessCard.setImageResource(selectedCard.card)
 
-
-        // Генерирование и отображение 15 случайных карт на экране
-        repeat(15) {
-            val card = deck.random()
+        for (card in cards) {
             val imageView = ImageView(context)
             imageView.setImageResource(card.card)
             imageView.setOnClickListener {
                 checkCard(card)
             }
+
             binding.cardGridLayout.addView(imageView)
         }
     }
 
     private fun createDeck(): List<CardModel> {
         val deck = mutableListOf<CardModel>()
-        val cardValues = listOf(R.drawable.card1, R.drawable.card4,  R.drawable.card2,  R.drawable.card3,  R.drawable.card5,
-            R.drawable.card6,  R.drawable.card7,  R.drawable.card8,  R.drawable.card10,  R.drawable.card9, R.drawable.card11,
-            R.drawable.card1, R.drawable.card1, R.drawable.card1, R.drawable.card1, R.drawable.card1, R.drawable.card1, R.drawable.card1, R.drawable.card1,
-            R.drawable.card12, R.drawable.card13, R.drawable.card1, R.drawable.card1, R.drawable.card1, R.drawable.card1, R.drawable.card1,
-            R.drawable.card1)
-        //var cards = Constants.getCardsList()
+        val cardValues = listOf(
+            com.example.cardgame.R.drawable.card1, com.example.cardgame.R.drawable.card2,  com.example.cardgame.R.drawable.card3,  com.example.cardgame.R.drawable.card4,  com.example.cardgame.R.drawable.card5,
+            com.example.cardgame.R.drawable.card6,  com.example.cardgame.R.drawable.card7,  com.example.cardgame.R.drawable.card8,  com.example.cardgame.R.drawable.card9,  com.example.cardgame.R.drawable.card10, com.example.cardgame.R.drawable.card11,
+            com.example.cardgame.R.drawable.card12, com.example.cardgame.R.drawable.card13, com.example.cardgame.R.drawable.card14, com.example.cardgame.R.drawable.card15, com.example.cardgame.R.drawable.card16, com.example.cardgame.R.drawable.card17, com.example.cardgame.R.drawable.card18, com.example.cardgame.R.drawable.card19,
+            com.example.cardgame.R.drawable.card20, com.example.cardgame.R.drawable.card21, com.example.cardgame.R.drawable.card22, com.example.cardgame.R.drawable.card23, com.example.cardgame.R.drawable.card24, com.example.cardgame.R.drawable.card25, com.example.cardgame.R.drawable.card26,
+            com.example.cardgame.R.drawable.card27)
 
         for (card in cardValues) {
 
