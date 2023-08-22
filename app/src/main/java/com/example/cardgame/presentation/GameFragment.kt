@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.cardgame.business.models.CardModel
 import com.example.cardgame.databinding.FragmentGameBinding
+import com.example.cardgame.utilits.replaceFragmentMainActivityCardGame
+import com.example.cardgame.viewModel.TimerViewModel
 import java.util.*
 import kotlin.random.Random
 
@@ -23,6 +26,8 @@ class GameFragment : Fragment() {
     private var score = 0
     private var attempts = 0
 
+    private lateinit var viewModel : TimerViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,9 +36,29 @@ class GameFragment : Fragment() {
 
         _binding = FragmentGameBinding.inflate(inflater, container, false)
 
+        viewModel  = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
+
         initializeGame()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.startTimer()
+
+        viewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
+            updateTimer(it)
+        })
+
+        onClick()
+    }
+
+    private fun onClick() {
+        binding.btPause.setOnClickListener {
+            viewModel.pauseTimer()
+            replaceFragmentMainActivityCardGame(PauseFragment())
+        }
     }
 
     private fun initializeGame() {
@@ -78,18 +103,37 @@ class GameFragment : Fragment() {
 
     private fun checkCard(card: CardModel) {
         attempts++
-        if (card == selectedCard) {
+        if (card == selectedCard && viewModel.timeLeftInMillis.value != 0L) {
             score++
             Toast.makeText(context, "Правильно! Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(context, "Неправильно! Указанная карта отличается. Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
         }
 
+        viewModel.resetTimer()
+        viewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
+            updateTimer(it)
+        })
+
         resetGame()
     }
 
     private fun resetGame() {
         binding.cardGridLayout.removeAllViews()
+        viewModel.startTimer()
+        viewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
+            updateTimer(it)
+        })
+
         initializeGame()
+    }
+
+    //timer
+
+    private fun updateTimer(millis: Long) {
+        val seconds = (millis / 1000).toInt()
+        val timeLeftFormatted = String.format(Locale.getDefault(),"%02d", seconds)
+
+        binding.tvTimeGame.text = timeLeftFormatted
     }
 }
