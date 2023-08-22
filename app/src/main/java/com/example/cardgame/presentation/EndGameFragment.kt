@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.example.cardgame.databinding.FragmentPauseBinding
+import com.example.cardgame.R
+import com.example.cardgame.databinding.FragmentEndGameBinding
+import com.example.cardgame.databinding.FragmentGameBinding
 import com.example.cardgame.utilits.replaceFragmentMainActivityCardGame
 import com.example.cardgame.viewModel.TimerViewModel
 
-class PauseFragment : Fragment() {
-    private var _binding : FragmentPauseBinding? = null
+class EndGameFragment : Fragment() {
+    private var _binding : FragmentEndGameBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var timerViewModel : TimerViewModel
@@ -20,9 +22,10 @@ class PauseFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPauseBinding.inflate(inflater, container, false)
 
-        timerViewModel = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
+        _binding = FragmentEndGameBinding.inflate(inflater, container, false)
+
+        timerViewModel  = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
 
         return binding.root
     }
@@ -34,13 +37,13 @@ class PauseFragment : Fragment() {
     }
 
     private fun onClick() {
-        binding.btBackMenu.setOnClickListener {
-            timerViewModel.resetTimer()
+        binding.btBackMenuEndGame.setOnClickListener {
             replaceFragmentMainActivityCardGame(MenuFragment())
         }
 
-        binding.btContinueGame.setOnClickListener {
-            timerViewModel.resumeTimer()
+        binding.btRestart.setOnClickListener {
+            timerViewModel.resetTimer()
+            timerViewModel.startTimer()
             replaceFragmentMainActivityCardGame(GameFragment())
         }
     }

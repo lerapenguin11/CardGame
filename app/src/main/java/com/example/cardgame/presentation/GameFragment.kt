@@ -26,7 +26,7 @@ class GameFragment : Fragment() {
     private var score = 0
     private var attempts = 0
 
-    private lateinit var viewModel : TimerViewModel
+    private lateinit var timerViewModel : TimerViewModel
 
 
     override fun onCreateView(
@@ -36,7 +36,7 @@ class GameFragment : Fragment() {
 
         _binding = FragmentGameBinding.inflate(inflater, container, false)
 
-        viewModel  = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
+        timerViewModel  = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
 
         initializeGame()
 
@@ -45,9 +45,9 @@ class GameFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.startTimer()
+        timerViewModel.startTimer()
 
-        viewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
+        timerViewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
             updateTimer(it)
         })
 
@@ -56,7 +56,7 @@ class GameFragment : Fragment() {
 
     private fun onClick() {
         binding.btPause.setOnClickListener {
-            viewModel.pauseTimer()
+            timerViewModel.pauseTimer()
             replaceFragmentMainActivityCardGame(PauseFragment())
         }
     }
@@ -103,15 +103,17 @@ class GameFragment : Fragment() {
 
     private fun checkCard(card: CardModel) {
         attempts++
-        if (card == selectedCard && viewModel.timeLeftInMillis.value != 0L) {
+        if (card == selectedCard && timerViewModel.timeLeftInMillis.value != 0L) {
             score++
             Toast.makeText(context, "Правильно! Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
         } else {
+            replaceFragmentMainActivityCardGame(EndGameFragment())
+            //timerViewModel.resetTimer()
             Toast.makeText(context, "Неправильно! Указанная карта отличается. Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.resetTimer()
-        viewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
+        timerViewModel.resetTimer()
+        timerViewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
             updateTimer(it)
         })
 
@@ -120,8 +122,8 @@ class GameFragment : Fragment() {
 
     private fun resetGame() {
         binding.cardGridLayout.removeAllViews()
-        viewModel.startTimer()
-        viewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
+        timerViewModel.startTimer()
+        timerViewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
             updateTimer(it)
         })
 
