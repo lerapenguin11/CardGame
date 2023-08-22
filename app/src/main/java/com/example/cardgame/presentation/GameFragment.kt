@@ -13,6 +13,7 @@ import com.example.cardgame.business.db.CardGameResultDatabase
 import com.example.cardgame.business.models.CardModel
 import com.example.cardgame.business.repos.CardGameRepositoryImpl
 import com.example.cardgame.databinding.FragmentGameBinding
+import com.example.cardgame.viewModel.AudioAndVibrationViewModel
 import com.example.cardgame.viewModel.CardGameViewModel
 import com.example.cardgame.viewModel.CardGameViewModelFactory
 import com.example.cardgame.viewModel.TimerViewModel
@@ -33,6 +34,7 @@ class GameFragment : Fragment() {
 
     private lateinit var timerViewModel : TimerViewModel
     private lateinit var coinsViewModel : CardGameViewModel
+    private lateinit var vibrationViewModel: AudioAndVibrationViewModel
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -45,6 +47,7 @@ class GameFragment : Fragment() {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
 
         timerViewModel  = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
+        vibrationViewModel = ViewModelProvider(this).get(AudioAndVibrationViewModel::class.java)
 
         val database = CardGameResultDatabase.getDatabase(requireContext())
         val repository = CardGameRepositoryImpl(database)
@@ -148,12 +151,12 @@ class GameFragment : Fragment() {
 
     private fun checkCard(card: CardModel) {
         attempts++
-        if (card == selectedCard && timerViewModel.timeLeftInMillis.value != 0L) {
+        if (card == selectedCard) {
             score++
             coinsViewModel.incrementCoins()
             Toast.makeText(context, "Правильно! Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
         } else {
-
+            closeCard()
         }
 
         timerViewModel.resetTimer()
