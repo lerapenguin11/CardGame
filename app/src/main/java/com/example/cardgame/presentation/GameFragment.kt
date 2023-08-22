@@ -8,10 +8,15 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.cardgame.R
+import com.example.cardgame.business.db.CardGameResultDatabase
 import com.example.cardgame.business.models.CardModel
+import com.example.cardgame.business.repos.CardGameRepositoryImpl
 import com.example.cardgame.databinding.FragmentGameBinding
-import com.example.cardgame.utilits.replaceFragmentMainActivityCardGame
+import com.example.cardgame.viewModel.CardGameViewModel
+import com.example.cardgame.viewModel.CardGameViewModelFactory
 import com.example.cardgame.viewModel.TimerViewModel
+import kotlinx.coroutines.*
 import java.util.*
 import kotlin.random.Random
 
@@ -27,6 +32,9 @@ class GameFragment : Fragment() {
     private var attempts = 0
 
     private lateinit var timerViewModel : TimerViewModel
+    private lateinit var coinsViewModel : CardGameViewModel
+
+    private val scope = CoroutineScope(Dispatchers.Main)
 
 
     override fun onCreateView(
@@ -37,6 +45,15 @@ class GameFragment : Fragment() {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
 
         timerViewModel  = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
+
+        val database = CardGameResultDatabase.getDatabase(requireContext())
+        val repository = CardGameRepositoryImpl(database)
+        val viewModelFactory = CardGameViewModelFactory(repository)
+        coinsViewModel = ViewModelProvider(this, viewModelFactory).get(CardGameViewModel::class.java)
+
+        coinsViewModel.coins.observe(requireActivity(), androidx.lifecycle.Observer { cardGame ->
+            binding.tvCoins.text = cardGame.toString()
+        })
 
         initializeGame()
 
@@ -57,8 +74,24 @@ class GameFragment : Fragment() {
     private fun onClick() {
         binding.btPause.setOnClickListener {
             timerViewModel.pauseTimer()
-            replaceFragmentMainActivityCardGame(PauseFragment())
+
+            scope.launch {
+                coinsViewModel.saveResult()
+            }
+            showResultScreen(bestResult = coinsViewModel.bestResult.value!!.toInt(),
+                totalCoins = coinsViewModel.coins.value!!.toInt(),)
         }
+    }
+
+    private fun showResultScreen(bestResult: Int, totalCoins: Int) {
+        val bundle = Bundle()
+        bundle.putString("totalCoins", totalCoins.toString())
+        bundle.putString("bestResult", bestResult.toString())
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        val fragment = PauseFragment()
+        fragment.arguments = bundle
+        transaction?.replace(R.id.main_layout, fragment)
+        transaction?.commit()
     }
 
     private fun initializeGame() {
@@ -77,11 +110,23 @@ class GameFragment : Fragment() {
             val imageView = ImageView(context)
             imageView.setImageResource(card.card)
             imageView.setOnClickListener {
-                checkCard(card)
+                if (timerViewModel.timeLeftInMillis.value != 0L){
+                    checkCard(card)
+                }
             }
 
             binding.cardGridLayout.addView(imageView)
         }
+    }
+
+    private fun closeCard() {
+        scope.launch {
+            coinsViewModel.saveResult()
+        }
+
+        showResultScreen(bestResult = coinsViewModel.bestResult.value!!.toInt(),
+            totalCoins = coinsViewModel.coins.value!!.toInt(),)
+        Toast.makeText(context, "Неправильно! Указанная карта отличается. Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
     }
 
     private fun createDeck(): List<CardModel> {
@@ -105,11 +150,10 @@ class GameFragment : Fragment() {
         attempts++
         if (card == selectedCard && timerViewModel.timeLeftInMillis.value != 0L) {
             score++
+            coinsViewModel.incrementCoins()
             Toast.makeText(context, "Правильно! Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
         } else {
-            replaceFragmentMainActivityCardGame(EndGameFragment())
-            //timerViewModel.resetTimer()
-            Toast.makeText(context, "Неправильно! Указанная карта отличается. Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
+
         }
 
         timerViewModel.resetTimer()
@@ -126,7 +170,6 @@ class GameFragment : Fragment() {
         timerViewModel.timeLeftInMillis.observe(requireActivity(), androidx.lifecycle.Observer {
             updateTimer(it)
         })
-
         initializeGame()
     }
 
@@ -137,5 +180,9 @@ class GameFragment : Fragment() {
         val timeLeftFormatted = String.format(Locale.getDefault(),"%02d", seconds)
 
         binding.tvTimeGame.text = timeLeftFormatted
+
+        if (seconds == 0){
+            closeCard()
+        }
     }
 }

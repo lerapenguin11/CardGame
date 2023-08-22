@@ -27,11 +27,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_bold"
-            android:text="current 100"
+            tools:text="current 100"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="30sp"
@@ -42,7 +42,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tv_best_score_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="best score 1000"
@@ -53,7 +53,7 @@
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_current" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -66,13 +66,13 @@
             android:background="@drawable/bg_bt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2">
+            app:layout_constraintTop_toBottomOf="@+id/tv_best_score_pause">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Continue"
+                android:text="@string/restart"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="22sp"
