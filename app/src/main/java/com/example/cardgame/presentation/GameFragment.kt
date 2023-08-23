@@ -13,7 +13,7 @@ import com.example.cardgame.business.db.CardGameResultDatabase
 import com.example.cardgame.business.models.CardModel
 import com.example.cardgame.business.repos.CardGameRepositoryImpl
 import com.example.cardgame.databinding.FragmentGameBinding
-import com.example.cardgame.viewModel.AudioAndVibrationViewModel
+import com.example.cardgame.viewModel.VibrationViewModel
 import com.example.cardgame.viewModel.CardGameViewModel
 import com.example.cardgame.viewModel.CardGameViewModelFactory
 import com.example.cardgame.viewModel.TimerViewModel
@@ -34,7 +34,7 @@ class GameFragment : Fragment() {
 
     private lateinit var timerViewModel : TimerViewModel
     private lateinit var coinsViewModel : CardGameViewModel
-    private lateinit var vibrationViewModel: AudioAndVibrationViewModel
+    private lateinit var vibrationViewModel: VibrationViewModel
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -47,7 +47,7 @@ class GameFragment : Fragment() {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
 
         timerViewModel  = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
-        vibrationViewModel = ViewModelProvider(requireActivity()).get(AudioAndVibrationViewModel::class.java)
+        vibrationViewModel = ViewModelProvider(requireActivity()).get(VibrationViewModel::class.java)
         vibrationViewModel.initVibrationSetting(requireContext())
 
         val database = CardGameResultDatabase.getDatabase(requireContext())

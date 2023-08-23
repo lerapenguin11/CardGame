@@ -7,7 +7,11 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.example.cardgame.viewModel.AudioAndVibrationViewModel" />
+            type="com.example.cardgame.viewModel.VibrationViewModel" />
+
+        <variable
+            name="backgroundMusicViewModel"
+            type="com.example.cardgame.viewModel.BackgroundMusicViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -100,10 +104,10 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/ic_music_background"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_bg_music"
+                    android:src="@{backgroundMusicViewModel.isBackgroundMusicEnabled() ? @drawable/ic_not_bg_music : @drawable/ic_bg_music}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -117,9 +121,10 @@
                 android:background="@drawable/bg_bt"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/bt_background_music"
-                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
 
                 <ImageView
                     android:id="@+id/ic_vibration"
@@ -153,19 +158,15 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/ic_music_game"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_music_game"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
+   <!-- android:src="@{viewModel. ? @drawable/ic_not_vibra : @drawable/ic_vibra}"-->

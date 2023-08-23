@@ -11,10 +11,7 @@ import com.example.cardgame.business.db.CardGameResultDatabase
 import com.example.cardgame.business.repos.CardGameRepositoryImpl
 import com.example.cardgame.databinding.FragmentPauseBinding
 import com.example.cardgame.utilits.replaceFragmentMainActivityCardGame
-import com.example.cardgame.viewModel.AudioAndVibrationViewModel
-import com.example.cardgame.viewModel.CardGameViewModel
-import com.example.cardgame.viewModel.CardGameViewModelFactory
-import com.example.cardgame.viewModel.TimerViewModel
+import com.example.cardgame.viewModel.*
 
 class PauseFragment : Fragment() {
     private var _binding : FragmentPauseBinding? = null
@@ -22,7 +19,8 @@ class PauseFragment : Fragment() {
 
     private lateinit var timerViewModel : TimerViewModel
     private lateinit var coinsViewModel : CardGameViewModel
-    private lateinit var vibrationViewModel: AudioAndVibrationViewModel
+    private lateinit var vibrationViewModel: VibrationViewModel
+    private lateinit var backgroundMusicViewModel: BackgroundMusicViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,8 +35,11 @@ class PauseFragment : Fragment() {
         val viewModelFactory = CardGameViewModelFactory(repository)
         coinsViewModel = ViewModelProvider(this, viewModelFactory).get(CardGameViewModel::class.java)
 
-        vibrationViewModel = ViewModelProvider(requireActivity()).get(AudioAndVibrationViewModel::class.java)
+        vibrationViewModel = ViewModelProvider(requireActivity()).get(VibrationViewModel::class.java)
         vibrationViewModel.initVibrationSetting(requireContext())
+
+        backgroundMusicViewModel = ViewModelProvider(requireActivity()).get(BackgroundMusicViewModel::class.java)
+        backgroundMusicViewModel.initBackgroundMusicSetting(requireContext())
 
 
         return binding.root
@@ -59,6 +60,7 @@ class PauseFragment : Fragment() {
         binding.btBackMenu.setOnClickListener {
             timerViewModel.resetTimer()
             vibrationViewModel.vibrate()
+            //backgroundMusicViewModel.startMusic()
             replaceFragmentMainActivityCardGame(MenuFragment())
         }
 
