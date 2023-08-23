@@ -1,18 +1,34 @@
 package com.example.cardgame.viewModel
 
-import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Build
 import android.os.Vibrator
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModel
 
-class AudioAndVibrationViewModel(application : Application) : AndroidViewModel(application) {
+class AudioAndVibrationViewModel() : ViewModel() {
 
-    fun vibratePhone() {
-        viewModelScope.launch {
-            val vibrator = getSystemService(getApplication(), Vibrator::class.java)
-            vibrator!!.vibrate(500) // Длительность вибрации - 1000 миллисекунд (1 секунда)
+    private lateinit var vibrator: Vibrator
+    private lateinit var sharedPreferences: SharedPreferences
+
+    fun initVibrationSetting(context: Context) {
+        vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+    }
+
+    fun isVibrationEnabled(): Boolean {
+        return sharedPreferences.getBoolean("vibration_enabled", true)
+    }
+
+    fun setVibrationEnabled(enabled: Boolean) {
+        sharedPreferences.edit().putBoolean("vibration_enabled", enabled).apply()
+    }
+
+    fun vibrate() {
+        if (isVibrationEnabled()) {
+            val pattern = longArrayOf(0, 100)
+            vibrator.vibrate(pattern, -1)
         }
     }
 }

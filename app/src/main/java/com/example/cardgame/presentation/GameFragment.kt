@@ -47,7 +47,8 @@ class GameFragment : Fragment() {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
 
         timerViewModel  = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
-        vibrationViewModel = ViewModelProvider(this).get(AudioAndVibrationViewModel::class.java)
+        vibrationViewModel = ViewModelProvider(requireActivity()).get(AudioAndVibrationViewModel::class.java)
+        vibrationViewModel.initVibrationSetting(requireContext())
 
         val database = CardGameResultDatabase.getDatabase(requireContext())
         val repository = CardGameRepositoryImpl(database)
@@ -77,6 +78,7 @@ class GameFragment : Fragment() {
     private fun onClick() {
         binding.btPause.setOnClickListener {
             timerViewModel.pauseTimer()
+            vibrationViewModel.vibrate()
 
             scope.launch {
                 coinsViewModel.saveResult()
@@ -126,6 +128,7 @@ class GameFragment : Fragment() {
         scope.launch {
             coinsViewModel.saveResult()
         }
+        vibrationViewModel.vibrate()
 
         showResultScreen(bestResult = coinsViewModel.bestResult.value!!.toInt(),
             totalCoins = coinsViewModel.coins.value!!.toInt(),)
@@ -150,6 +153,7 @@ class GameFragment : Fragment() {
     }
 
     private fun checkCard(card: CardModel) {
+        vibrationViewModel.vibrate()
         attempts++
         if (card == selectedCard) {
             score++

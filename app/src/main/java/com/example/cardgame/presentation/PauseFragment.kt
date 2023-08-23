@@ -11,6 +11,7 @@ import com.example.cardgame.business.db.CardGameResultDatabase
 import com.example.cardgame.business.repos.CardGameRepositoryImpl
 import com.example.cardgame.databinding.FragmentPauseBinding
 import com.example.cardgame.utilits.replaceFragmentMainActivityCardGame
+import com.example.cardgame.viewModel.AudioAndVibrationViewModel
 import com.example.cardgame.viewModel.CardGameViewModel
 import com.example.cardgame.viewModel.CardGameViewModelFactory
 import com.example.cardgame.viewModel.TimerViewModel
@@ -21,6 +22,7 @@ class PauseFragment : Fragment() {
 
     private lateinit var timerViewModel : TimerViewModel
     private lateinit var coinsViewModel : CardGameViewModel
+    private lateinit var vibrationViewModel: AudioAndVibrationViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +36,10 @@ class PauseFragment : Fragment() {
         val repository = CardGameRepositoryImpl(database)
         val viewModelFactory = CardGameViewModelFactory(repository)
         coinsViewModel = ViewModelProvider(this, viewModelFactory).get(CardGameViewModel::class.java)
+
+        vibrationViewModel = ViewModelProvider(requireActivity()).get(AudioAndVibrationViewModel::class.java)
+        vibrationViewModel.initVibrationSetting(requireContext())
+
 
         return binding.root
     }
@@ -52,11 +58,13 @@ class PauseFragment : Fragment() {
     private fun onClick() {
         binding.btBackMenu.setOnClickListener {
             timerViewModel.resetTimer()
+            vibrationViewModel.vibrate()
             replaceFragmentMainActivityCardGame(MenuFragment())
         }
 
         binding.btContinueGame.setOnClickListener {
             timerViewModel.resetTimer()
+            vibrationViewModel.vibrate()
             replaceFragmentMainActivityCardGame(GameFragment())
         }
     }
