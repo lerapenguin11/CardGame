@@ -60,7 +60,6 @@ class PauseFragment : Fragment() {
         binding.btBackMenu.setOnClickListener {
             timerViewModel.resetTimer()
             vibrationViewModel.vibrate()
-            //backgroundMusicViewModel.startMusic()
             replaceFragmentMainActivityCardGame(MenuFragment())
         }
 

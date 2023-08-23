@@ -14,6 +14,7 @@ import com.example.cardgame.R
 import com.example.cardgame.databinding.FragmentMenuBinding
 import com.example.cardgame.utilits.replaceFragmentMainActivityCardGame
 import com.example.cardgame.viewModel.BackgroundMusicViewModel
+import com.example.cardgame.viewModel.MusicGameViewModel
 import com.example.cardgame.viewModel.VibrationViewModel
 import com.example.cardgame.viewModel.TimerViewModel
 
@@ -24,6 +25,7 @@ class MenuFragment : Fragment() {
     private lateinit var timerViewModel : TimerViewModel
     private lateinit var vibrationViewModel: VibrationViewModel
     private lateinit var backgroundMusicViewModel: BackgroundMusicViewModel
+    private lateinit var gameMusicViewModel: MusicGameViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -39,6 +41,8 @@ class MenuFragment : Fragment() {
 
         backgroundMusicViewModel = ViewModelProvider(requireActivity()).get(BackgroundMusicViewModel::class.java)
 
+        gameMusicViewModel = ViewModelProvider(requireActivity()).get(MusicGameViewModel::class.java)
+
         //vibration
         vibrationViewModel.initVibrationSetting(requireContext())
 
@@ -47,13 +51,15 @@ class MenuFragment : Fragment() {
 
         binding.btVibration.setOnClickListener {
             if (vibrationViewModel.isVibrationEnabled()){
-                backgroundMusicViewModel.stopMusic()
+                //backgroundMusicViewModel.stopMusic()
                 binding.icVibration.setImageResource(R.drawable.ic_vibra)
                 vibrationViewModel.setVibrationEnabled(false)
+                //backgroundMusicViewModel.backgroundMusic()
 
             } else{
                 binding.icVibration.setImageResource(R.drawable.ic_not_vibra)
                 vibrationViewModel.setVibrationEnabled(true)
+                //backgroundMusicViewModel.backgroundMusic()
             }
         }
         //vibration
@@ -80,6 +86,29 @@ class MenuFragment : Fragment() {
         }
         //background music
 
+        //game music
+        gameMusicViewModel.initMusicGameSetting(requireContext())
+        binding.gameMusicViewModel = gameMusicViewModel
+        binding.lifecycleOwner = this
+
+        binding.btMusicGame.setOnClickListener {
+            if (gameMusicViewModel.isGameMusicEnabled()){
+                binding.icMusicGame.setImageResource(R.drawable.ic_music_game)
+                vibrationViewModel.vibrate()
+                gameMusicViewModel.setGameMusicEnable(false)
+                //gameMusicViewModel.stopMusic()
+            } else{
+                //gameMusicViewModel.stopMusic()
+                binding.icMusicGame.setImageResource(R.drawable.ic_not_game_music)
+                vibrationViewModel.vibrate()
+                gameMusicViewModel.setGameMusicEnable(true)
+            }
+        }
+
+
+        //game music
+
+
 
         return binding.root
     }
@@ -87,7 +116,13 @@ class MenuFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {
         super.onResume()
-        backgroundMusicViewModel.startMusic()
+        if (backgroundMusicViewModel.isBackgroundMusicEnabled()){
+            backgroundMusicViewModel.startMusic()
+            binding.icMusicBackground.setImageResource(R.drawable.ic_not_bg_music)
+        }
+
+        //backgroundMusicViewModel.backgroundMusic()
+
 
         onClick()
     }

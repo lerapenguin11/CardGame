@@ -13,10 +13,7 @@ import com.example.cardgame.business.db.CardGameResultDatabase
 import com.example.cardgame.business.models.CardModel
 import com.example.cardgame.business.repos.CardGameRepositoryImpl
 import com.example.cardgame.databinding.FragmentGameBinding
-import com.example.cardgame.viewModel.VibrationViewModel
-import com.example.cardgame.viewModel.CardGameViewModel
-import com.example.cardgame.viewModel.CardGameViewModelFactory
-import com.example.cardgame.viewModel.TimerViewModel
+import com.example.cardgame.viewModel.*
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.random.Random
@@ -35,6 +32,7 @@ class GameFragment : Fragment() {
     private lateinit var timerViewModel : TimerViewModel
     private lateinit var coinsViewModel : CardGameViewModel
     private lateinit var vibrationViewModel: VibrationViewModel
+    private lateinit var gameMusicViewModel: MusicGameViewModel
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -49,6 +47,9 @@ class GameFragment : Fragment() {
         timerViewModel  = ViewModelProvider(requireActivity()).get(TimerViewModel::class.java)
         vibrationViewModel = ViewModelProvider(requireActivity()).get(VibrationViewModel::class.java)
         vibrationViewModel.initVibrationSetting(requireContext())
+
+        gameMusicViewModel = ViewModelProvider(requireActivity()).get(MusicGameViewModel::class.java)
+        gameMusicViewModel.initMusicGameSetting(requireContext())
 
         val database = CardGameResultDatabase.getDatabase(requireContext())
         val repository = CardGameRepositoryImpl(database)
@@ -79,12 +80,19 @@ class GameFragment : Fragment() {
         binding.btPause.setOnClickListener {
             timerViewModel.pauseTimer()
             vibrationViewModel.vibrate()
+            if (gameMusicViewModel.isGameMusicEnabled()){
+                gameMusicViewModel.startMusic()
+            }
+            //
+            //gameMusicViewModel.gameMusic()
 
             scope.launch {
                 coinsViewModel.saveResult()
             }
             showResultScreen(bestResult = coinsViewModel.bestResult.value!!.toInt(),
                 totalCoins = coinsViewModel.coins.value!!.toInt(),)
+
+            //gameMusicViewModel.stopMusic()
         }
     }
 

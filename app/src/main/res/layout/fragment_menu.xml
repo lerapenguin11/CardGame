@@ -12,6 +12,10 @@
         <variable
             name="backgroundMusicViewModel"
             type="com.example.cardgame.viewModel.BackgroundMusicViewModel" />
+
+        <variable
+            name="gameMusicViewModel"
+            type="com.example.cardgame.viewModel.MusicGameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -148,6 +152,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bt_music_game"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_bt"
@@ -161,6 +166,7 @@
                     android:id="@+id/ic_music_game"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:src="@{gameMusicViewModel.isGameMusicEnabled() ? @drawable/ic_not_game_music : @drawable/ic_music_game}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
