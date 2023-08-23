@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.example.cardgame.R
 import com.example.cardgame.business.db.CardGameResultDatabase
 import com.example.cardgame.business.repos.CardGameRepositoryImpl
 import com.example.cardgame.databinding.FragmentPauseBinding
@@ -51,8 +52,8 @@ class PauseFragment : Fragment() {
 
         val displayCurrent = arguments?.getString("totalCoins")
         val displayBestResult = arguments?.getString("bestResult")
-        binding.tvCurrent.text = "score ${displayCurrent.toString()}"
-        binding.tvBestScorePause.text = "best score ${displayBestResult.toString()}"
+        binding.tvCurrent.text = getString(R.string.score) + "  " + "${displayCurrent.toString()}"
+        binding.tvBestScorePause.text = getString(R.string.best_score) + " " + "${displayBestResult.toString()}"
         onClick()
     }
 

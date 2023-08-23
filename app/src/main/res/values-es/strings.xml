@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Juego de cartas</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
+    <string name="find">Encontrar</string>
+    <string name="start">Comenzar</string>
+    <string name="the_card">la tarjeta</string>
+    <string name="current">Actual</string>
+    <string name="restart">Reanudar</string>
+    <string name="best_score">mejor puntuación</string>
+    <string name="score">puntaje</string>
+    <string name="menu">menú</string>
+    <string name="guess_the">Guess the</string>
+    <string name="cards_and_win">cards and win</string>
+</resources>

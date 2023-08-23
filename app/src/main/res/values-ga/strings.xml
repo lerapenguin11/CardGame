@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Cluiche Cárta</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Dia duit blúire bán</string>
+    <string name="find">Faigh</string>
+    <string name="start">Tosaigh</string>
+    <string name="the_card">an chárta</string>
+    <string name="current">Reatha</string>
+    <string name="restart">Tosaigh arís</string>
+    <string name="best_score">scór is fearr</string>
+    <string name="score">scór</string>
+    <string name="menu">roghchlár</string>
+    <string name="guess_the">Guess the</string>
+    <string name="cards_and_win">cards and win</string>
+</resources>

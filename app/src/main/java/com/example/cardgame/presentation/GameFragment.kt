@@ -80,19 +80,15 @@ class GameFragment : Fragment() {
         binding.btPause.setOnClickListener {
             timerViewModel.pauseTimer()
             vibrationViewModel.vibrate()
-            if (gameMusicViewModel.isGameMusicEnabled()){
+            if (gameMusicViewModel.isGameMusicEnabled() && coinsViewModel.coins.value!!.toInt() > 0){
                 gameMusicViewModel.startMusic()
             }
-            //
-            //gameMusicViewModel.gameMusic()
 
             scope.launch {
                 coinsViewModel.saveResult()
             }
             showResultScreen(bestResult = coinsViewModel.bestResult.value!!.toInt(),
                 totalCoins = coinsViewModel.coins.value!!.toInt(),)
-
-            //gameMusicViewModel.stopMusic()
         }
     }
 
@@ -140,7 +136,7 @@ class GameFragment : Fragment() {
 
         showResultScreen(bestResult = coinsViewModel.bestResult.value!!.toInt(),
             totalCoins = coinsViewModel.coins.value!!.toInt(),)
-        Toast.makeText(context, "Неправильно! Указанная карта отличается. Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, "Неправильно! Указанная карта отличается. Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
     }
 
     private fun createDeck(): List<CardModel> {
@@ -166,7 +162,7 @@ class GameFragment : Fragment() {
         if (card == selectedCard) {
             score++
             coinsViewModel.incrementCoins()
-            Toast.makeText(context, "Правильно! Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "Правильно! Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
         } else {
             closeCard()
         }

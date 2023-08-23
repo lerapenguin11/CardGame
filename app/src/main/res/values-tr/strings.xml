@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Kart oyunu</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Merhaba boş parça</string>
+    <string name="find">Bulmak</string>
+    <string name="start">Başlangıç</string>
+    <string name="the_card">kart</string>
+    <string name="current">Akım</string>
+    <string name="restart">tekrar başlat</string>
+    <string name="best_score">en iyi puan</string>
+    <string name="score">Gol</string>
+    <string name="menu">Menü</string>
+    <string name="guess_the">Guess the</string>
+    <string name="cards_and_win">cards and win</string>
+</resources>
