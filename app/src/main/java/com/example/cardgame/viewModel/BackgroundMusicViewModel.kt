@@ -10,7 +10,7 @@ class BackgroundMusicViewModel : ViewModel() {
 
     private lateinit var sharedPreferences: SharedPreferences
 
-    private lateinit var backgroundMusic : MediaPlayer
+    private var backgroundMusic : MediaPlayer? = null
 
     fun initBackgroundMusicSetting(context: Context) {
         backgroundMusic = MediaPlayer.create(context, R.raw.background_music)
@@ -29,21 +29,27 @@ class BackgroundMusicViewModel : ViewModel() {
         return sharedPreferences.getBoolean(PREFS_BACKGROUND_MUSIC_ENABLE, true)
     }
 
-    fun backgroundMusic(){
+    /*fun backgroundMusic(){
         if (isBackgroundMusicEnabled()){
             //backgroundMusic = MediaPlayer.create(context, R.raw.background_music)
-            backgroundMusic.start()
+            backgroundMusic!!.start()
         } else{
-            backgroundMusic.pause()
+            backgroundMusic!!.pause()
         }
-    }
+    }*/
 
     fun stopMusic(){
-        backgroundMusic.pause()
+        backgroundMusic!!.pause()
     }
 
     fun startMusic(){
-        backgroundMusic.start()
+        backgroundMusic!!.start()
+    }
+
+    fun destroyMusic(){
+        backgroundMusic?.stop()
+        backgroundMusic?.release()
+        backgroundMusic = null
     }
 
     /*----------------- BACKGROUND MUSIC ------------------*/

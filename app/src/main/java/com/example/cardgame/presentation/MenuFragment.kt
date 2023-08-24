@@ -43,7 +43,7 @@ class MenuFragment : Fragment() {
 
         gameMusicViewModel = ViewModelProvider(requireActivity()).get(MusicGameViewModel::class.java)
 
-        //vibration
+        //--------------- vibration ---------------
         vibrationViewModel.initVibrationSetting(requireContext())
 
         binding.viewModel = vibrationViewModel
@@ -51,20 +51,17 @@ class MenuFragment : Fragment() {
 
         binding.btVibration.setOnClickListener {
             if (vibrationViewModel.isVibrationEnabled()){
-                //backgroundMusicViewModel.stopMusic()
                 binding.icVibration.setImageResource(R.drawable.ic_vibra)
                 vibrationViewModel.setVibrationEnabled(false)
-                //backgroundMusicViewModel.backgroundMusic()
 
             } else{
                 binding.icVibration.setImageResource(R.drawable.ic_not_vibra)
                 vibrationViewModel.setVibrationEnabled(true)
-                //backgroundMusicViewModel.backgroundMusic()
             }
         }
-        //vibration
+        //--------------- vibration ---------------
 
-        //background music
+        //--------------- background music ---------------
         backgroundMusicViewModel.initBackgroundMusicSetting(requireContext())
 
         binding.backgroundMusicViewModel = backgroundMusicViewModel
@@ -84,9 +81,9 @@ class MenuFragment : Fragment() {
                 backgroundMusicViewModel.setBackgroundMusicEnable(true)
             }
         }
-        //background music
+        //--------------- background music ---------------
 
-        //game music
+        //--------------- game music ---------------
         gameMusicViewModel.initMusicGameSetting(requireContext())
         binding.gameMusicViewModel = gameMusicViewModel
         binding.lifecycleOwner = this
@@ -96,9 +93,7 @@ class MenuFragment : Fragment() {
                 binding.icMusicGame.setImageResource(R.drawable.ic_music_game)
                 vibrationViewModel.vibrate()
                 gameMusicViewModel.setGameMusicEnable(false)
-                //gameMusicViewModel.stopMusic()
             } else{
-                //gameMusicViewModel.stopMusic()
                 binding.icMusicGame.setImageResource(R.drawable.ic_not_game_music)
                 vibrationViewModel.vibrate()
                 gameMusicViewModel.setGameMusicEnable(true)
@@ -106,9 +101,7 @@ class MenuFragment : Fragment() {
         }
 
 
-        //game music
-
-
+        //--------------- game music ---------------
 
         return binding.root
     }
@@ -121,9 +114,6 @@ class MenuFragment : Fragment() {
             binding.icMusicBackground.setImageResource(R.drawable.ic_not_bg_music)
         }
 
-        //backgroundMusicViewModel.backgroundMusic()
-
-
         onClick()
     }
 
@@ -134,5 +124,10 @@ class MenuFragment : Fragment() {
             vibrationViewModel.vibrate()
             replaceFragmentMainActivityCardGame(GameFragment())
         }
+    }
+
+    override fun onDestroyView() {
+        backgroundMusicViewModel.destroyMusic()
+        super.onDestroyView()
     }
 }

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.cardgame.R
 import com.example.cardgame.business.db.CardGameResultDatabase
 import com.example.cardgame.business.models.CardModel
+import com.example.cardgame.business.models.Constants
 import com.example.cardgame.business.repos.CardGameRepositoryImpl
 import com.example.cardgame.databinding.FragmentGameBinding
 import com.example.cardgame.viewModel.*
@@ -22,18 +23,12 @@ import kotlin.random.Random
 class GameFragment : Fragment() {
     private var _binding : FragmentGameBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var deck: List<CardModel>
     private lateinit var selectedCard: CardModel
-
-    private var score = 0
-    private var attempts = 0
-
     private lateinit var timerViewModel : TimerViewModel
     private lateinit var coinsViewModel : CardGameViewModel
     private lateinit var vibrationViewModel: VibrationViewModel
     private lateinit var gameMusicViewModel: MusicGameViewModel
-
     private val scope = CoroutineScope(Dispatchers.Main)
 
 
@@ -88,7 +83,7 @@ class GameFragment : Fragment() {
                 coinsViewModel.saveResult()
             }
             showResultScreen(bestResult = coinsViewModel.bestResult.value!!.toInt(),
-                totalCoins = coinsViewModel.coins.value!!.toInt(),)
+                totalCoins = coinsViewModel.coins.value!!.toInt())
         }
     }
 
@@ -136,20 +131,13 @@ class GameFragment : Fragment() {
 
         showResultScreen(bestResult = coinsViewModel.bestResult.value!!.toInt(),
             totalCoins = coinsViewModel.coins.value!!.toInt(),)
-        //Toast.makeText(context, "Неправильно! Указанная карта отличается. Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
     }
 
     private fun createDeck(): List<CardModel> {
         val deck = mutableListOf<CardModel>()
-        val cardValues = listOf(
-            com.example.cardgame.R.drawable.card1, com.example.cardgame.R.drawable.card2,  com.example.cardgame.R.drawable.card3,  com.example.cardgame.R.drawable.card4,  com.example.cardgame.R.drawable.card5,
-            com.example.cardgame.R.drawable.card6,  com.example.cardgame.R.drawable.card7,  com.example.cardgame.R.drawable.card8,  com.example.cardgame.R.drawable.card9,  com.example.cardgame.R.drawable.card10, com.example.cardgame.R.drawable.card11,
-            com.example.cardgame.R.drawable.card12, com.example.cardgame.R.drawable.card13, com.example.cardgame.R.drawable.card14, com.example.cardgame.R.drawable.card15, com.example.cardgame.R.drawable.card16, com.example.cardgame.R.drawable.card17, com.example.cardgame.R.drawable.card18, com.example.cardgame.R.drawable.card19,
-            com.example.cardgame.R.drawable.card20, com.example.cardgame.R.drawable.card21, com.example.cardgame.R.drawable.card22, com.example.cardgame.R.drawable.card23, com.example.cardgame.R.drawable.card24, com.example.cardgame.R.drawable.card25, com.example.cardgame.R.drawable.card26,
-            com.example.cardgame.R.drawable.card27)
+        val cardValues = Constants.getCardsList()
 
         for (card in cardValues) {
-
             deck.add(CardModel(card))
         }
 
@@ -158,11 +146,8 @@ class GameFragment : Fragment() {
 
     private fun checkCard(card: CardModel) {
         vibrationViewModel.vibrate()
-        attempts++
         if (card == selectedCard) {
-            score++
             coinsViewModel.incrementCoins()
-            //Toast.makeText(context, "Правильно! Количество попыток: $attempts", Toast.LENGTH_SHORT).show()
         } else {
             closeCard()
         }

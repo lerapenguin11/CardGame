@@ -9,10 +9,8 @@ class CardGameRepositoryImpl(private val database: CardGameResultDatabase) : Car
 
     override suspend fun getBestResult(): Int {
         return withContext(Dispatchers.IO) {
-            // Здесь выполняется запрос к базе данных
             database.cardGameResultDao().getBestResult()
         }
-        //return database.cardGameResultDao().getBestResult() ?: 0
     }
 
     override suspend fun saveResult(result: Int) {
@@ -20,26 +18,5 @@ class CardGameRepositoryImpl(private val database: CardGameResultDatabase) : Car
         withContext(Dispatchers.IO){
             database.cardGameResultDao().saveResult(cardGameResult)
         }
-
     }
 }
-
-/*class CardGameRepository(private val cardGameDao: CardGameDao) {
-    val cardGame: LiveData<CardGame> = cardGameDao.getCardGame()
-
-    suspend fun updateCardGame(cardGame: CardGame) {
-        cardGameDao.updateCardGame(cardGame)
-    }
-}*/
-
-/*fun insertResult(result: CardGameResult) {
-        cardGameResultDao.insert(result)
-    }
-
-    fun getBestResult(): CardGameResult {
-        return cardGameResultDao.getBestResult()
-    }
-
-    fun getTotalCoins(): Int {
-        return cardGameResultDao.getTotalCoins()
-    }*/
