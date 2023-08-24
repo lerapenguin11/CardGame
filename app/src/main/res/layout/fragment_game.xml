@@ -63,7 +63,7 @@
                 android:layout_marginStart="10dp"
                 android:fontFamily="@font/roboto_bold"
                 android:includeFontPadding="false"
-                android:text="0"
+                tools:text="0"
                 android:textColor="@color/white"
                 android:textSize="25sp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView5"
@@ -261,7 +261,5 @@
                 android:layout_columnWeight="1"
                 tools:src="@drawable/card" />
         </GridLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

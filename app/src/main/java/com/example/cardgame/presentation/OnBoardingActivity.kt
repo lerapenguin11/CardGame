@@ -25,7 +25,7 @@ class OnBoardingActivity : AppCompatActivity() {
         finish.setOnClickListener { v: View? ->
             val intent = Intent(
                 this@OnBoardingActivity,
-                MainActivity::class.java
+                CardGameActivity::class.java
             )
             startActivity(intent)
             finish()
